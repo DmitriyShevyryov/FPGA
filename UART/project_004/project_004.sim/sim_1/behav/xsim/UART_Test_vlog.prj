@@ -1,0 +1,15 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../004/004/004.srcs/sources_1/new/ASCIIConverter.v" \
+"../../../../../004/004/004.srcs/sources_1/new/ASCII_Encoder.v" \
+"../../../../../004/004/004.srcs/sources_1/new/UART_Receiver.v" \
+"../../../../../004/004/004.srcs/sources_1/new/UART_Receiver_wrapper.v" \
+"../../../../../004/004/004.srcs/sources_1/new/UART_Sender.v" \
+"../../../../../004/004/004.srcs/sources_1/new/UART_Sender_wrapper.v" \
+"../../../../../004/004/004.srcs/sim_1/new/UART_Test.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module PlisButton(
+module Seven_Segment_Top (
     input wire enter_number_btn,
     input wire [3:0] enter_number,
     input wire display_clk,

@@ -1,0 +1,15 @@
+`timescale 1ns / 1ps
+
+module clockDelimeter #(clk_mod = 1)
+(
+    input wire clk,
+    output reg clknew = 0
+);
+
+wire [$clog2(clk_mod)-1: 0] count;
+
+always @(posedge count == 0) clknew = ~clknew;
+
+counter #(.step(1), .count_module(clk_mod)) cnnt (.clk(clk), .out(count), .enable(1'b1));
+
+endmodule

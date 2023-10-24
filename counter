@@ -1,0 +1,15 @@
+`timescale 1ns / 1ps
+
+module counter #(step=1, count_module=16) (
+   input wire clk,
+   input wire reset,
+   input wire enable,
+   output reg [$clog2(count_module)-1:0] out = count_module
+);
+
+always @(posedge clk) begin 
+   if (enable) out = (count_module + step + out) % count_module;
+   if (reset) out = 0;
+end
+
+endmodule

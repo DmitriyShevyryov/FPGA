@@ -1,0 +1,26 @@
+`timescale 1ns / 1ps
+
+module UART_Sender_wrapper(
+    input clk,
+    input digits_in,
+    input [4:0] digits,
+    output tx,
+    output tx_ongoing
+);
+
+wire [7:0] digits_encoded;
+
+ASCII_Encoder ascii_encoder(
+    .code(digits),
+    .out(digits_encoded)
+);
+
+UART_Sender uart_sender (
+    .clk(clk),
+    .data_out_ready(digits_in),
+    .data_out(digits_encoded),
+    .tx(tx),
+    .wait_packet(tx_ongoing)
+);
+
+endmodule

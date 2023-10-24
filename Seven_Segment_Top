@@ -15,17 +15,9 @@ initial begin
     enter_numbers = 0;
 end
 
-//reg display_clk = 0;
-//reg [3:0] enter_number = 4'b1011;
- //always #1 display_clk = ~display_clk;
-
-clockDelimeter #(.clk_mod(10240)) clkDel0 (.clk(display_clk), .clknew(new_clk));
-RattleFilter rfilter0 (.clk(display_clk), .clk_enable(1), .sig_in(enter_number_btn),
+Clock_Delimeter #(.clk_mod(10240)) clkDel0 (.clk(display_clk), .clknew(new_clk));
+Rattle_Filter rfilter0 (.clk(display_clk), .clk_enable(1), .sig_in(enter_number_btn),
     .sig_out_enable(enter_number_enabled));
-    
-    
-//SimButton #(.range(50), .waitfor(100)) sb (.clk(display_clk), .sig_in(enter_number_btn),
-    //    .sig_out_enable(enter_number_enabled));
 
 reg [7:0] length = 0;
 reg [32:0] enter_numbers;

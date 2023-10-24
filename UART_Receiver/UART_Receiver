@@ -1,0 +1,63 @@
+`timescale 1ns / 1ps
+
+module UART_Receiver #(
+    CLOCK_RATE = 100_000_000, 
+    BAUD_RATE = 9600 
+)(
+    input clk, 
+    input rx, 
+    output reg ready_out = 0, 
+    output reg [7:0] data_out = 0 
+);
+
+parameter RESET = 0, WAIT_START_BIT = 1, WAIT_HALF_RATE = 2, LOAD = 3;
+reg [1:0] state = RESET; 
+reg [3:0] bit_counter = 0; 
+
+reg [$clog2(CLOCK_RATE / BAUD_RATE):0] baud_counter = 0; 
+wire baud_flag = baud_counter == CLOCK_RATE / BAUD_RATE; 
+
+reg [2:0] major_buf = -1;
+wire major_out = major_buf[0] & major_buf[1] |
+     major_buf[0] & major_buf[2] |
+     major_buf[1] & major_buf[2];
+    
+always @(posedge clk) begin
+    major_buf <= (major_buf << 1) | rx; 
+    
+    case(state)
+        RESET: begin
+            bit_counter <= 0;
+            baud_counter <= 0;
+            data_out <= 0;
+            ready_out <= 0;
+            state <= WAIT_START_BIT;
+        end
+
+        WAIT_START_BIT: 
+            if (~major_out)
+                state <= WAIT_HALF_RATE;
+                
+        WAIT_HALF_RATE:
+            if (baud_counter == CLOCK_RATE / BAUD_RATE / 2) begin 
+                baud_counter = 0;
+                state <= LOAD;
+            end
+                
+        LOAD: 
+            if (baud_flag) begin
+                if (bit_counter == 8) begin 
+                    ready_out <= major_out;
+                    state <= RESET;
+                end
+                else begin 
+                    data_out <= {major_out, data_out[7:1]};
+                    bit_counter <= bit_counter + 1;
+                end
+            end
+    endcase
+
+    if (state != WAIT_START_BIT)
+        baud_counter <= (baud_counter + 1) % (CLOCK_RATE / BAUD_RATE + 1); 
+end
+endmodule

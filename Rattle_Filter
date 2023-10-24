@@ -1,0 +1,23 @@
+`timescale 1ns / 1ps
+module Rattle_Filter(
+    input wire clk,
+    input wire clk_enable,
+    input wire sig_in,
+    
+    output reg sig_out = 0,
+    output reg sig_out_enable = 0
+    );
+    wire sig_synced;
+    wire [3:0] count_out;
+    reg max_count_and_enabled;
+    Synchro syn0 (.clk(clk), .signal_async(sig_in),
+        .signal_sync(sig_synced));
+    counter #(.step(1), .count_module(16)) cnt0 (.clk(clk), .reset(sig_synced
+        ~^ sig_out), .out(count_out), .enable(clk_enable));
+    always @(posedge clk) begin
+        max_count_and_enabled = (count_out == 4'b1111 && clk_enable);
+        if (max_count_and_enabled)
+            sig_out = sig_synced;
+        sig_out_enable = max_count_and_enabled && sig_synced;
+    end
+endmodule

@@ -1,0 +1,18 @@
+`timescale 1ns / 1ps
+
+module Synchro(
+    input wire clk,
+    input wire signal_async,
+    output reg signal_sync = 0
+);
+
+reg inner_trigger = 0;
+
+always @(posedge clk)
+    inner_trigger = signal_async;
+
+always @(posedge clk) 
+    signal_sync = inner_trigger;
+
+
+endmodule

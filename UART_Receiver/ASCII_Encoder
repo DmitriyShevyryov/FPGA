@@ -1,0 +1,71 @@
+`timescale 1ns / 1ps
+
+module ASCII_Encoder(
+    input [4:0] code,
+    output reg[7:0] out
+);
+
+// ASCII Codes
+parameter 
+    ZERO_ASCII = 8'h30,
+    ONE_ASCII = 8'h31,
+    TWO_ASCII = 8'h32,
+    THREE_ASCII = 8'h33,
+    FOUR_ASCII = 8'h34,
+    FIVE_ASCII = 8'h35,
+    SIX_ASCII = 8'h36,
+    SEVEN_ASCII = 8'h37,
+    EIGHT_ASCII = 8'h38,
+    NINE_ASCII = 8'h39,
+    A_ASCII = 8'h61,
+    B_ASCII = 8'h62,
+    C_ASCII = 8'h63,
+    D_ASCII = 8'h64,
+    E_ASCII = 8'h65,
+    F_ASCII = 8'h66
+;
+
+// Internal codes
+parameter
+    NULL_CODE = 0,
+    ZERO_CODE = 5'h10,
+    ONE_CODE = 5'h11,
+    TWO_CODE = 5'h12,
+    THREE_CODE = 5'h13,
+    FOUR_CODE = 5'h14,
+    FIVE_CODE = 5'h15,
+    SIX_CODE = 5'h16,
+    SEVEN_CODE = 5'h17,
+    EIGHT_CODE = 5'h18,
+    NINE_CODE = 5'h19,
+    A_CODE = 5'h1A,
+    B_CODE = 5'h1B,
+    C_CODE = 5'h1C,
+    D_CODE = 5'h1D,
+    E_CODE = 5'h1E,
+    F_CODE = 5'h1F
+;
+
+always @(code) begin
+    case (code)
+        ZERO_CODE: out = ZERO_ASCII;
+        ONE_CODE: out = ONE_ASCII;
+        TWO_CODE: out = TWO_ASCII;
+        THREE_CODE: out = THREE_ASCII;
+        FOUR_CODE: out = FOUR_ASCII;
+        FIVE_CODE: out = FIVE_ASCII;
+        SIX_CODE: out = SIX_ASCII;
+        SEVEN_CODE: out = SEVEN_ASCII;
+        EIGHT_CODE: out = EIGHT_ASCII;
+        NINE_CODE: out = NINE_ASCII;
+        A_CODE: out = A_ASCII;
+        B_CODE: out = B_ASCII;
+        C_CODE: out = C_ASCII;
+        D_CODE: out = D_ASCII;
+        E_CODE: out = E_ASCII;
+        F_CODE: out = F_ASCII;
+        default: out = NULL_CODE;
+    endcase
+end
+    
+endmodule

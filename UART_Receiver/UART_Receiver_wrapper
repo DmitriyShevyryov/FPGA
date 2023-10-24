@@ -1,0 +1,23 @@
+`timescale 1ns / 1ps
+
+module UART_Receiver_wrapper(
+    input clk,
+    input rx,
+    output out_ready,
+    output [4:0] out,
+    output [7:0] out_raw
+);
+
+UART_Receiver uart_receiver(
+    .clk(clk),
+    .rx(rx),
+    .data_out(out_raw),
+    .ready_out(out_ready)
+);
+
+ASCIIConverter ascii_converter (
+    .code(out_raw),
+    .out(out)
+);
+
+endmodule

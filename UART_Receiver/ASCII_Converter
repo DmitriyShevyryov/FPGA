@@ -1,0 +1,75 @@
+`timescale 1ns / 1ps
+
+module ASCIIConverter(
+    input wire[7:0] code,
+    output reg[4:0] out
+);
+
+// ASCII Codes
+parameter 
+    ZERO_ASCII = 8'h30,
+    ONE_ASCII = 8'h31,
+    TWO_ASCII = 8'h32,
+    THREE_ASCII = 8'h33,
+    FOUR_ASCII = 8'h34,
+    FIVE_ASCII = 8'h35,
+    SIX_ASCII = 8'h36,
+    SEVEN_ASCII = 8'h37,
+    EIGHT_ASCII = 8'h38,
+    NINE_ASCII = 8'h39,
+    A_ASCII = 8'h61,
+    B_ASCII = 8'h62,
+    C_ASCII = 8'h63,
+    D_ASCII = 8'h64,
+    E_ASCII = 8'h65,
+    F_ASCII = 8'h66,
+    R_ASCII = 8'h72
+;
+
+// Internal codes
+parameter
+    NULL_CODE = 0,
+    RESET_CODE = 5'h01,
+    ZERO_CODE = 5'h10,
+    ONE_CODE = 5'h11,
+    TWO_CODE = 5'h12,
+    THREE_CODE = 5'h13,
+    FOUR_CODE = 5'h14,
+    FIVE_CODE = 5'h15,
+    SIX_CODE = 5'h16,
+    SEVEN_CODE = 5'h17,
+    EIGHT_CODE = 5'h18,
+    NINE_CODE = 5'h19,
+    A_CODE = 5'h1A,
+    B_CODE = 5'h1B,
+    C_CODE = 5'h1C,
+    D_CODE = 5'h1D,
+    E_CODE = 5'h1E,
+    F_CODE = 5'h1F
+;
+
+
+always @(code) begin 
+    case (code)
+        R_ASCII: out = RESET_CODE;
+        ZERO_ASCII: out = ZERO_CODE;
+        ONE_ASCII: out = ONE_CODE;
+        TWO_ASCII: out = TWO_CODE;
+        THREE_ASCII: out = THREE_CODE;
+        FOUR_ASCII: out = FOUR_CODE;
+        FIVE_ASCII: out = FIVE_CODE;
+        SIX_ASCII: out = SIX_CODE;
+        SEVEN_ASCII: out = SEVEN_CODE;
+        EIGHT_ASCII: out = EIGHT_CODE;
+        NINE_ASCII: out = NINE_CODE;
+        A_ASCII: out = A_CODE;
+        B_ASCII: out = B_CODE;
+        C_ASCII: out = C_CODE;
+        D_ASCII: out = D_CODE;
+        E_ASCII: out = E_CODE;
+        F_ASCII: out = F_CODE;
+        default: out = NULL_CODE;
+    endcase
+end
+
+endmodule

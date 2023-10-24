@@ -1,0 +1,71 @@
+`timescale 1ns / 1ps
+
+module UART_Test();
+
+parameter BOARD_CLK = 10,
+          BAUD_BOARD_CLK_RATIO = 20834
+;
+
+reg clk = 0;
+always #(BOARD_CLK) clk = ~clk;
+
+reg rx = 1;
+
+reg [3:0] i = 0;
+task generate_UART (input [7:0] code); begin
+        rx <= 0;
+        #(BOARD_CLK * BAUD_BOARD_CLK_RATIO);
+        for(i = 0; i < 8; i = i + 1) begin 
+            rx <= code[i];
+            #(BOARD_CLK * BAUD_BOARD_CLK_RATIO);
+        end
+        rx = 1;
+        #(BOARD_CLK * BAUD_BOARD_CLK_RATIO);
+    end
+endtask
+
+wire out_ready;
+wire [4:0] out;
+
+UART_Receiver_wrapper uart_receiver_wrapper (
+    .clk(clk),
+    .rx(rx),
+    .out_ready(out_ready),
+    .out(out)
+);
+
+wire tx;
+reg data_out_ready = 0;
+reg[4:0] data_out = 0;
+wire wait_packet;
+
+always @(posedge out_ready) begin 
+    data_out = out;
+end
+
+
+
+UART_Sender_wrapper uart_sender_wrapper (
+    .clk(clk),
+    .digits_in(data_out_ready),
+    .digits(data_out),
+    .tx(tx),
+    .tx_ongoing(wait_packet)
+);
+
+task send_and_receive_packet (input [7:0] code); begin 
+    generate_UART(code);
+    data_out_ready = 1;
+    #(BOARD_CLK * BAUD_BOARD_CLK_RATIO * 10);
+end
+endtask
+
+initial begin 
+    #(BOARD_CLK * BAUD_BOARD_CLK_RATIO);
+    send_and_receive_packet(8'h2E);
+    $finish;
+end
+
+
+
+endmodule

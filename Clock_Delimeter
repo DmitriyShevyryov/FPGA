@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module clockDelimeter #(clk_mod = 1)
+module Clock_Delimeter #(clk_mod = 1)
 (
     input wire clk,
     output reg clknew = 0

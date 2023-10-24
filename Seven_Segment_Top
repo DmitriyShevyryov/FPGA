@@ -1,0 +1,73 @@
+`timescale 1ns / 1ps
+
+module PlisButton(
+    input wire enter_number_btn,
+    input wire [3:0] enter_number,
+    input wire display_clk,
+    output reg [7:0] anodes,
+    output wire [7:0] segments
+);
+
+wire new_clk;
+wire enter_number_enabled, enter_number_btn;
+
+initial begin
+    enter_numbers = 0;
+end
+
+//reg display_clk = 0;
+//reg [3:0] enter_number = 4'b1011;
+ //always #1 display_clk = ~display_clk;
+
+clockDelimeter #(.clk_mod(10240)) clkDel0 (.clk(display_clk), .clknew(new_clk));
+RattleFilter rfilter0 (.clk(display_clk), .clk_enable(1), .sig_in(enter_number_btn),
+    .sig_out_enable(enter_number_enabled));
+    
+    
+//SimButton #(.range(50), .waitfor(100)) sb (.clk(display_clk), .sig_in(enter_number_btn),
+    //    .sig_out_enable(enter_number_enabled));
+
+reg [7:0] length = 0;
+reg [32:0] enter_numbers;
+initial begin
+    enter_numbers = 0;
+end
+always@(posedge enter_number_enabled) begin
+    enter_numbers = enter_numbers << 4;
+    enter_numbers[0] = enter_number[0];
+    enter_numbers[1] = enter_number[1];
+    enter_numbers[2] = enter_number[2];
+    enter_numbers[3] = enter_number[3];
+    length = length + 1;
+    //enter_number = enter_number + 1;
+end
+
+
+reg [7:0] j = 0;
+initial begin
+    anodes = 8'b11111111;
+end
+
+wire [3:0] number_to_send;
+
+always @(posedge new_clk) begin
+    if(length > 0)
+        j = (j + 1) % length;
+    else
+        j = 0;
+        
+    anodes = ~(8'b1 << j);
+    
+end
+
+wire [31:0] numbers_to_send = enter_numbers >> j*4;
+assign number_to_send[0] = numbers_to_send[0];
+assign number_to_send[1] = numbers_to_send[1];
+assign number_to_send[2] = numbers_to_send[2];
+assign number_to_send[3] = numbers_to_send[3];
+
+big_to_seg bin_to_seg(.data(number_to_send), .segments(segments));
+
+
+
+endmodule
